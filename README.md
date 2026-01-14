@@ -5,3 +5,6 @@ Financial stress is one of the most common problems faced by people worldwide. M
 
 Syla Marie Cumuyog
 "Choose you love, love your choice" President Thomas S. Monson
+
+Miguel Condorí
+"The more you learn about the Savior, the easier it will be to trust in His mercy, His infinite love, and His strengthening, healing, and redeeming power. The Savior is never closer to you than when you are facing or climbing a mountain with faith" President Russell M. Nelson
