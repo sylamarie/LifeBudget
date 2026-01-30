@@ -1,5 +1,6 @@
 import MonthlyDashboard from "./components/MonthlyDashboard";
 import "./App.css";
+import './styles/theme.css';
 
 function App() {
   return (

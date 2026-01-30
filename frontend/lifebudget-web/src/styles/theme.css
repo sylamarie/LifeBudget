@@ -1,0 +1,17 @@
+:root {
+  /* Brand */
+  --color-primary: #2E7D32;
+  --color-accent: #A5D6A7;
+
+  /* Surfaces */
+  --color-surface: #FFFFFF;
+  --color-background: #F5F7F6;
+
+  /* Text */
+  --text-primary: #1E1E1E;
+  --text-secondary: #5F6368;
+
+  /* Status */
+  --color-success: #43A047;
+  --color-error: #E53935;
+}
