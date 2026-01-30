@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./TransactionForm.css";
 
 function TransactionForm({ onAdd }) {
   const [description, setDescription] = useState("");
@@ -21,7 +22,7 @@ function TransactionForm({ onAdd }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="transaction-form" onSubmit={handleSubmit}>
       <input
         placeholder="Description"
         value={description}
@@ -42,7 +43,9 @@ function TransactionForm({ onAdd }) {
         <option value="income">Income</option>
       </select>
 
-      <button type="submit">Add Transaction</button>
+      <button type="submit" className="primary-button">
+        Add Transaction
+      </button>
     </form>
   );
 }

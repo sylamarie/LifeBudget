@@ -1,8 +1,24 @@
+/* ===== Monthly Dashboard ===== */
+
 .dashboard {
   padding: 2rem;
   background-color: var(--color-background);
   min-height: 100vh;
 }
+
+/* ===== Titles ===== */
+
+.dashboard h1 {
+  color: var(--color-primary); /* Primary brand color */
+  margin-bottom: 1.5rem;
+}
+
+.category-breakdown h2 {
+  color: var(--color-primary); /* Accent section header */
+  margin-bottom: 1rem;
+}
+
+/* ===== Monthly Summary ===== */
 
 .summary {
   display: flex;
@@ -37,12 +53,11 @@
 .summary-card.negative strong {
   color: var(--color-error);
 }
+
+/* ===== Category Breakdown ===== */
+
 .category-breakdown {
   margin-bottom: 2rem;
-}
-
-.category-breakdown h2 {
-  margin-bottom: 1rem;
 }
 
 .category-breakdown ul {
@@ -67,6 +82,8 @@
 .category-breakdown strong {
   color: var(--text-primary);
 }
+
+/* ===== Empty States ===== */
 
 .empty {
   color: var(--text-secondary);
