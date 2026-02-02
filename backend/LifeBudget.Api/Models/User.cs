@@ -14,5 +14,9 @@ public class User
     // Sprint 1: basic placeholder (I'll hash later)
     public string PasswordHash { get; set; } = string.Empty;
 
+    public string FirstName { get; set; } = string.Empty;
+
+    public string LastName { get; set; } = string.Empty;
+
     public DateTime CreatedAtUtc { get; set; } = DateTime.UtcNow;
 }

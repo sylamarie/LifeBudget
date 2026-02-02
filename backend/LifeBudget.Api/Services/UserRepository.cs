@@ -22,6 +22,10 @@ public class UserRepository
     {
         user.Email = user.Email.Trim().ToLowerInvariant();
         user.CreatedAtUtc = DateTime.UtcNow;
+        if (string.IsNullOrWhiteSpace(user.Id))
+        {
+            user.Id = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
+        }
         await _users.InsertOneAsync(user);
     }
 }

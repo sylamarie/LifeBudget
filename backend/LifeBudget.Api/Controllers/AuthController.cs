@@ -21,9 +21,13 @@ public class AuthController : ControllerBase
     {
         var email = request.Email.Trim().ToLowerInvariant();
         var password = request.Password;
+        var firstName = request.FirstName?.Trim() ?? string.Empty;
+        var lastName = request.LastName?.Trim() ?? string.Empty;
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
             return BadRequest("Email and password are required.");
+        if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
+            return BadRequest("First name and last name are required.");
 
         var existing = await _users.FindByEmailAsync(email);
         if (existing != null)
@@ -33,11 +37,14 @@ public class AuthController : ControllerBase
         var user = new User
         {
             Email = email,
-            PasswordHash = password
+            PasswordHash = password,
+            FirstName = firstName,
+            LastName = lastName
         };
 
         await _users.CreateAsync(user);
-        return Ok(new { message = "Registered" });
+        var userId = string.IsNullOrWhiteSpace(user.Id) ? user.Email : user.Id;
+        return Ok(new { message = "Registered", userId, firstName, lastName });
     }
 
     [HttpPost("login")]
@@ -54,6 +61,7 @@ public class AuthController : ControllerBase
 
         if (user.PasswordHash != password) return Unauthorized();
 
-        return Ok(new { message = "Logged in" });
+        var loginUserId = string.IsNullOrWhiteSpace(user.Id) ? user.Email : user.Id;
+        return Ok(new { message = "Logged in", userId = loginUserId, firstName = user.FirstName, lastName = user.LastName });
     }
 }

@@ -5,6 +5,7 @@
   gap: 0.75rem;
   margin-bottom: 1.5rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
 /* ===== Inputs & Select ===== */
@@ -52,4 +53,14 @@
 /* Active (click) */
 .primary-button:active {
   transform: scale(0.97);
+}
+
+.secondary-button {
+  padding: 0.55rem 1rem;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  background: #ffffff;
+  color: var(--color-primary);
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
 }

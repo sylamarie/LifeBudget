@@ -1,0 +1,67 @@
+.lb-auth {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(180deg, #f6f8f6 0%, #eef3ef 100%);
+  padding: 24px;
+}
+
+.lb-auth-card {
+  width: min(420px, 100%);
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(31, 58, 40, 0.12);
+  border: 1px solid rgba(46, 125, 50, 0.12);
+}
+
+.lb-auth-card h1 {
+  margin: 0 0 8px;
+  font-family: var(--font-display);
+  font-size: 1.8rem;
+}
+
+.lb-auth-subtitle {
+  margin: 0 0 20px;
+  color: var(--text-secondary);
+}
+
+.lb-auth-form {
+  display: grid;
+  gap: 14px;
+}
+
+.lb-auth-form label {
+  display: grid;
+  gap: 6px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.lb-auth-form input {
+  padding: 0.6rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #d8e1d9;
+  font-size: 0.95rem;
+}
+
+.lb-auth-form input:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(165, 214, 167, 0.3);
+}
+
+.lb-auth-error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
+
+.lb-auth-toggle {
+  margin-top: 16px;
+  border: none;
+  background: none;
+  color: var(--color-primary);
+  font-weight: 600;
+  cursor: pointer;
+}

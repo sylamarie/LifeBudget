@@ -7,7 +7,12 @@ function TransactionItem({ transaction }) {
         transaction.type === "income" ? "income" : "expense"
       }`}
     >
-      <span className="description">{transaction.description}</span>
+      <div className="transaction-main">
+        <span className="description">{transaction.description}</span>
+        <span className="transaction-type">
+          {transaction.type === "income" ? "Income" : "Expense"}
+        </span>
+      </div>
       <strong className="amount">${transaction.amount}</strong>
     </li>
   );
