@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\LifeBudget.Api.csproj": {}
+    "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\LifeBudget.Api.csproj": {}
   },
   "projects": {
-    "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\LifeBudget.Api.csproj": {
+    "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\LifeBudget.Api.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\LifeBudget.Api.csproj",
+        "projectUniqueName": "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\LifeBudget.Api.csproj",
         "projectName": "LifeBudget.Api",
-        "projectPath": "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\LifeBudget.Api.csproj",
+        "projectPath": "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\LifeBudget.Api.csproj",
         "packagesPath": "C:\\Users\\sylam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\obj\\",
+        "outputPath": "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\sylam\\AppData\\Roaming\\NuGet\\NuGet.Config"

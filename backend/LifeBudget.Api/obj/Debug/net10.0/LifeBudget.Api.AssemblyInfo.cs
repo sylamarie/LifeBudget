@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LifeBudget.Api")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+c09a31426ace1ebd9449acab9ca37fc1153050d9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7063863b76cb2725b30e9c8c09b07ef2e3969004")]
 [assembly: System.Reflection.AssemblyProductAttribute("LifeBudget.Api")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LifeBudget.Api")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
