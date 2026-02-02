@@ -1,0 +1,55 @@
+/* ===== Transaction Form ===== */
+
+.transaction-form {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  align-items: center;
+}
+
+/* ===== Inputs & Select ===== */
+
+.transaction-form input,
+.transaction-form select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  background-color: var(--color-surface);
+  color: var(--text-primary);
+  font-size: 0.9rem;
+}
+
+.transaction-form input::placeholder {
+  color: var(--text-secondary);
+}
+
+/* Focus state (accent) */
+.transaction-form input:focus,
+.transaction-form select:focus {
+  outline: none;
+  border-color: var(--color-accent);
+  box-shadow: 0 0 0 2px rgba(165, 214, 167, 0.3);
+}
+
+/* ===== Primary Button ===== */
+
+.primary-button {
+  padding: 0.55rem 1rem;
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Hover */
+.primary-button:hover {
+  background-color: var(--color-accent);
+}
+
+/* Active (click) */
+.primary-button:active {
+  transform: scale(0.97);
+}
