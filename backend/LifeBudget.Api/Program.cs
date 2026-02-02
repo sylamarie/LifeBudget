@@ -9,13 +9,27 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("DevCors", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+            .AllowAnyHeader()
+            .AllowAnyMethod();
+    });
+});
+
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDb"));
 
 builder.Services.AddSingleton<IMongoClient>(sp =>
 {
     var settings = sp.GetRequiredService<IOptions<MongoDbSettings>>().Value;
-    return new MongoClient(settings.ConnectionString);
+    var envConnection = Environment.GetEnvironmentVariable("MONGODB_URI");
+    var connectionString = string.IsNullOrWhiteSpace(envConnection)
+        ? settings.ConnectionString
+        : envConnection;
+    return new MongoClient(connectionString);
 });
 
 builder.Services.AddSingleton(sp =>
@@ -26,6 +40,7 @@ builder.Services.AddSingleton(sp =>
 });
 
 builder.Services.AddSingleton<UserRepository>();
+builder.Services.AddSingleton<TransactionRepository>();
 
 var app = builder.Build();
 
@@ -34,8 +49,12 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseHttpsRedirection();
+}
 
-app.UseHttpsRedirection();
+app.UseCors("DevCors");
 
 var summaries = new[]
 {

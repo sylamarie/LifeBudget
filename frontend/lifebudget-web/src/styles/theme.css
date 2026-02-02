@@ -1,17 +1,22 @@
 :root {
   /* Brand */
-  --color-primary: #2E7D32;
-  --color-accent: #A5D6A7;
+  --color-primary: #2e7d32;
+  --color-accent: #a5d6a7;
 
   /* Surfaces */
-  --color-surface: #FFFFFF;
-  --color-background: #F5F7F6;
+  --color-surface: #ffffff;
+  --color-background: #f5f7f6;
 
   /* Text */
-  --text-primary: #1E1E1E;
-  --text-secondary: #5F6368;
+  --text-primary: #1e1e1e;
+  --text-secondary: #5f6368;
 
   /* Status */
-  --color-success: #43A047;
-  --color-error: #E53935;
+  --color-success: #43a047;
+  --color-error: #e53935;
+
+  /* Typography */
+  --font-body: "Manrope", "Segoe UI", sans-serif;
+  --font-display: "Playfair Display", "Times New Roman", serif;
+  --font-logo: "Poppins", "Manrope", sans-serif;
 }

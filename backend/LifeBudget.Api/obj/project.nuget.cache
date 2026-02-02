@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "C0RkgCNyoMY=",
+  "dgSpecHash": "61Qh4FcjFys=",
   "success": true,
-  "projectFilePath": "C:\\Users\\sylam\\LifeBudget\\backend\\Lifebudget.Api\\LifeBudget.Api.csproj",
+  "projectFilePath": "C:\\Users\\sylam\\LifeBudget\\backend\\LifeBudget.Api\\LifeBudget.Api.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\sylam\\.nuget\\packages\\dnsclient\\1.6.1\\dnsclient.1.6.1.nupkg.sha512",
     "C:\\Users\\sylam\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
