@@ -43,6 +43,11 @@ LifeBudget
 - JavaScript / HTML / CSS
 - Node.js
 
+### Design and Project Board
+These resources capture the initial ideation, planning, and system design for the LifeBudget project.
+[Trello Board](https://trello.com/b/o0uedwXo/lifebudget)
+[Sequence Diagrams](https://miro.com/welcomeonboard/UU84VkhvYjdPeTFZRGd0OU5ManpzalFJUFRJbDZlQ1lmdEZvdkJ3ZEZqWHo4a0diSis4L1l0UVJKYTJub0lUeEZOM3A3Y1dhRkFZaEtlczg2WTRYVEVIc0JuSk00NmtrUW1KL1gzTm9DS3l2YlVVanBJazczUjlYajNFbEtvTDFQdGo1ZEV3bUdPQWRZUHQzSGl6V2NBPT0hdjE=?share_link_id=782349014295)
+
 ## How to Run the Project
 
 Two terminals are required to run the project locally.
