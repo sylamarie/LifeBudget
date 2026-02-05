@@ -1,0 +1,67 @@
+.lb-bills-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0 18px;
+  flex-wrap: wrap;
+}
+
+.lb-tab {
+  border: 1px solid rgba(46, 125, 50, 0.2);
+  background: #ffffff;
+  color: var(--color-primary);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.lb-tab.active {
+  background: #e8f3ea;
+  border-color: rgba(46, 125, 50, 0.35);
+}
+
+.lb-bills-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.lb-pill {
+  background: #e8f3ea;
+  color: #1f3b25;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+.lb-bills-table {
+  display: grid;
+  gap: 8px;
+}
+
+.lb-bills-table .lb-table-row,
+.lb-bills-table .lb-table-row.compact {
+  grid-template-columns: 2fr 1.2fr 1fr 1fr 1fr;
+}
+
+.lb-status {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.lb-status.paid {
+  background: #e6f4ea;
+  color: var(--color-success);
+}
+
+.lb-status.unpaid {
+  background: #fbe9e7;
+  color: var(--color-error);
+}
