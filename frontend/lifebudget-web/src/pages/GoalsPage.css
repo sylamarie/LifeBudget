@@ -13,6 +13,20 @@
   font-weight: 600;
 }
 
+.lb-goal-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr)) auto auto;
+  gap: 8px;
+  margin: 12px 0 16px;
+}
+
+.lb-goal-form input {
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid rgba(46, 125, 50, 0.25);
+  font-size: 0.9rem;
+}
+
 .lb-goals-summary {
   display: flex;
   align-items: center;
@@ -33,6 +47,12 @@
   padding: 14px;
   background: #fff;
   display: grid;
+  gap: 10px;
+}
+
+.lb-goal-actions {
+  display: flex;
+  justify-content: flex-end;
   gap: 10px;
 }
 
