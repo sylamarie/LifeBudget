@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../components/DashboardShell.css";
 
 function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+   const [goals, setGoals] = useState([]);
+   const [goalsLoading, setGoalsLoading] = useState(false);
+   const [goalsError, setGoalsError] = useState("");
   const userId = localStorage.getItem("lifebudgetUserId") || "";
+  const navigate = useNavigate();
 
   const { totalIncome, totalExpenses, remaining } = useMemo(() => {
     const income = transactions
@@ -58,7 +63,52 @@ function DashboardPage() {
     };
 
     loadTransactions();
+
+    if (!userId) {
+      setGoals([]);
+      return;
+    }
+
+    const loadGoals = async () => {
+      setGoalsLoading(true);
+      setGoalsError("");
+      try {
+        const response = await fetch(`/api/goals?userId=${userId}`);
+        if (!response.ok) {
+          throw new Error("Failed to load goals.");
+        }
+        const data = await response.json();
+        setGoals(data);
+      } catch (err) {
+        setGoalsError(err.message || "Something went wrong.");
+      } finally {
+        setGoalsLoading(false);
+      }
+    };
+
+    loadGoals();
   }, [userId]);
+
+  const goalsSummary = useMemo(() => {
+    if (!goals.length) {
+      return { totalTarget: 0, totalCurrent: 0, completionPercent: 0 };
+    }
+    const totalTarget = goals.reduce(
+      (sum, g) => sum + Number(g.targetAmount || 0),
+      0
+    );
+    const totalCurrent = goals.reduce(
+      (sum, g) => sum + Number(g.currentAmount || 0),
+      0
+    );
+    const pct =
+      totalTarget > 0 ? Math.min((totalCurrent / totalTarget) * 100, 100) : 0;
+    return {
+      totalTarget,
+      totalCurrent,
+      completionPercent: Math.round(pct),
+    };
+  }, [goals]);
 
   return (
     <>
@@ -179,13 +229,77 @@ function DashboardPage() {
           <article className="lb-card">
             <div className="lb-card-header">
               <h2>Savings Goals</h2>
-              <button className="lb-link" type="button">
+              <button
+                className="lb-link"
+                type="button"
+                onClick={() => navigate("/app/goals")}
+              >
                 View All
               </button>
             </div>
-            <div className="lb-empty-panel">
-              <p className="lb-empty">No goals yet.</p>
-            </div>
+            {!userId ? (
+              <div className="lb-empty-panel">
+                <p className="lb-empty">Log in to see your goals.</p>
+              </div>
+            ) : goalsLoading ? (
+              <div className="lb-empty-panel">
+                <p className="lb-empty">Loading goals...</p>
+              </div>
+            ) : goalsError ? (
+              <div className="lb-empty-panel">
+                <p className="lb-empty">{goalsError}</p>
+              </div>
+            ) : goals.length === 0 ? (
+              <div className="lb-empty-panel">
+                <p className="lb-empty">No goals yet. Create one to get started.</p>
+              </div>
+            ) : (
+              <div className="lb-summary-list">
+                <div>
+                  <span>Total Saved</span>
+                  <strong>
+                    {formatMoney(goalsSummary.totalCurrent)}
+                  </strong>
+                </div>
+                <div>
+                  <span>Total Target</span>
+                  <strong>
+                    {formatMoney(goalsSummary.totalTarget)}
+                  </strong>
+                </div>
+                <div>
+                  <span>Overall Progress</span>
+                  <strong className="lb-success">
+                    {goalsSummary.completionPercent}%
+                  </strong>
+                </div>
+                {goals.slice(0, 3).map((goal) => {
+                  const key = goal.id || goal._id || goal.name;
+                  const target = Number(goal.targetAmount || 0);
+                  const current = Number(goal.currentAmount || 0);
+                  const pct =
+                    target > 0
+                      ? Math.min((current / target) * 100, 100)
+                      : 0;
+                  return (
+                    <div key={key} className="lb-goal">
+                      <div className="lb-goal-header">
+                        <span>{goal.name}</span>
+                        <span className="lb-muted">
+                          {Math.round(pct)}%
+                        </span>
+                      </div>
+                      <div className="lb-progress">
+                        <div
+                          className="lb-progress-bar"
+                          style={{ width: `${pct}%` }}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </article>
         </div>
       </section>
