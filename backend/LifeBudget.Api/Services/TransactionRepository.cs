@@ -50,4 +50,8 @@ public class TransactionRepository
 
         return await _transactions.FindOneAndUpdateAsync(filter, updateDef, options);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> feature/frontend-docs

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import "./GoalsPage.css";
 import "../components/DashboardShell.css";
 
@@ -112,6 +113,10 @@ function GoalsPage() {
       </div>
     </section>
   );
+=======
+function GoalsPage() {
+  return <p className="lb-empty">This is the goals page.</p>;
+>>>>>>> feature/frontend-docs
 }
 
 export default GoalsPage;
