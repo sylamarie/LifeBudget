@@ -88,7 +88,11 @@ public class TransactionsController : ControllerBase
         return deleted ? NoContent() : NotFound();
     }
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 =======
 }
 >>>>>>> feature/frontend-docs
+=======
+}
+>>>>>>> 99d44fb5208103262f75752423cf5962d8c3fdc1
