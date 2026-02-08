@@ -1,30 +1,90 @@
 import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import "../components/DashboardShell.css";
 
 function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-   const [goals, setGoals] = useState([]);
-   const [goalsLoading, setGoalsLoading] = useState(false);
-   const [goalsError, setGoalsError] = useState("");
+  const [goals, setGoals] = useState([]);
+  const [goalsLoading, setGoalsLoading] = useState(false);
+  const [goalsError, setGoalsError] = useState("");
+  const [bills, setBills] = useState([]);
+  const [billsLoading, setBillsLoading] = useState(false);
+  const [billsError, setBillsError] = useState("");
+  const { monthOffset, monthLabel } = useOutletContext();
   const userId = localStorage.getItem("lifebudgetUserId") || "";
   const navigate = useNavigate();
 
-  const { totalIncome, totalExpenses, remaining } = useMemo(() => {
-    const income = transactions
+  const selectedMonthDate = useMemo(() => {
+    const date = new Date();
+    date.setDate(1);
+    date.setMonth(date.getMonth() + monthOffset);
+    return date;
+  }, [monthOffset]);
+
+  const isSameMonth = (value) => {
+    if (!value) return false;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return false;
+    return (
+      date.getFullYear() === selectedMonthDate.getFullYear() &&
+      date.getMonth() === selectedMonthDate.getMonth()
+    );
+  };
+
+  const isSameMonthFor = (value, targetDate) => {
+    if (!value) return false;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return false;
+    return (
+      date.getFullYear() === targetDate.getFullYear() &&
+      date.getMonth() === targetDate.getMonth()
+    );
+  };
+
+  const {
+    totalIncome,
+    totalExpenses,
+    remaining,
+    totalIncomeAll,
+    totalExpensesAll,
+    hasMonthTransactions,
+  } = useMemo(() => {
+    const monthTransactions = transactions.filter((t) =>
+      isSameMonth(t.dateUtc || t.date)
+    );
+    const income = monthTransactions
       .filter((t) => t.type === "income")
       .reduce((sum, t) => sum + Number(t.amount), 0);
-    const expenses = transactions
+    const expenses = monthTransactions
       .filter((t) => t.type === "expense")
       .reduce((sum, t) => sum + Number(t.amount), 0);
+
+    const incomeAll = transactions
+      .filter((t) => t.type === "income")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+    const expensesAll = transactions
+      .filter((t) => t.type === "expense")
+      .reduce((sum, t) => sum + Number(t.amount), 0);
+
     return {
       totalIncome: income,
       totalExpenses: expenses,
       remaining: income - expenses,
+      totalIncomeAll: incomeAll,
+      totalExpensesAll: expensesAll,
+      hasMonthTransactions: monthTransactions.length > 0,
     };
-  }, [transactions]);
+  }, [transactions, selectedMonthDate]);
+
+  const displayTotals = hasMonthTransactions
+    ? { income: totalIncome, expenses: totalExpenses, remaining }
+    : {
+        income: totalIncomeAll,
+        expenses: totalExpensesAll,
+        remaining: totalIncomeAll - totalExpensesAll,
+      };
 
   const formatMoney = (value) =>
     value.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -38,6 +98,45 @@ function DashboardPage() {
       day: "numeric",
       year: "numeric",
     });
+  };
+
+  const formatDueDate = (date) =>
+    date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+
+  const parseTransactionAmount = (tx) => {
+    const amount = Number(tx.amount);
+    if (!Number.isFinite(amount)) return 0;
+    if (tx.type === "income") return Math.abs(amount);
+    if (tx.type === "expense") return Math.abs(amount);
+    return amount;
+  };
+
+  const getMonthKey = (value) => {
+    if (!value) return null;
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return null;
+    return `${date.getFullYear()}-${date.getMonth()}`;
+  };
+
+  const getDueDateForMonth = (bill) => {
+    const currentMonth = selectedMonthDate.getMonth();
+    const currentYear = selectedMonthDate.getFullYear();
+    const dueDay = Number(bill.dueDay || 1);
+    const dueDate = new Date(currentYear, currentMonth, dueDay);
+    return dueDate;
+  };
+
+  const getEffectiveStatus = (bill) => {
+    const rawStatus = (bill.status || "unpaid").toLowerCase();
+    const normalizedStatus = rawStatus === "upcoming" ? "unpaid" : rawStatus;
+    if (!bill.isRecurring) return normalizedStatus;
+    if (!bill.lastPaidUtc) return "unpaid";
+    const lastPaid = new Date(bill.lastPaidUtc);
+    if (Number.isNaN(lastPaid.getTime())) return "unpaid";
+    const sameMonth =
+      lastPaid.getFullYear() === selectedMonthDate.getFullYear() &&
+      lastPaid.getMonth() === selectedMonthDate.getMonth();
+    return sameMonth ? "paid" : "unpaid";
   };
 
   useEffect(() => {
@@ -54,6 +153,7 @@ function DashboardPage() {
           throw new Error("Failed to load transactions.");
         }
         const data = await response.json();
+        console.log("dashboard transactions:", data);
         setTransactions(data);
       } catch (err) {
         setError(err.message || "Something went wrong.");
@@ -87,7 +187,26 @@ function DashboardPage() {
     };
 
     loadGoals();
-  }, [userId]);
+
+    const loadBills = async () => {
+      setBillsLoading(true);
+      setBillsError("");
+      try {
+        const response = await fetch(`/api/bills?userId=${userId}`);
+        if (!response.ok) {
+          throw new Error("Failed to load bills.");
+        }
+        const data = await response.json();
+        setBills(data);
+      } catch (err) {
+        setBillsError(err.message || "Something went wrong.");
+      } finally {
+        setBillsLoading(false);
+      }
+    };
+
+    loadBills();
+  }, [userId, monthOffset]);
 
   const goalsSummary = useMemo(() => {
     if (!goals.length) {
@@ -110,23 +229,40 @@ function DashboardPage() {
     };
   }, [goals]);
 
+  const upcomingBills = useMemo(() => {
+    if (!bills.length) return [];
+    return bills
+      .map((bill) => ({
+        ...bill,
+        effectiveStatus: getEffectiveStatus(bill),
+        dueDate: getDueDateForMonth(bill),
+      }))
+      .filter((bill) => bill.effectiveStatus === "unpaid")
+      .sort((a, b) => a.dueDate - b.dueDate)
+      .slice(0, 5);
+  }, [bills, selectedMonthDate]);
+
   return (
     <>
       <section className="lb-grid lb-grid-top">
         <article className="lb-card">
           <div className="lb-card-header">
             <h2>Overall Balance</h2>
-            <span className="lb-muted">This Month</span>
+            <span className="lb-muted">
+              {hasMonthTransactions || transactions.length === 0
+                ? monthLabel
+                : "All Time"}
+            </span>
           </div>
-          <div className="lb-balance">{formatMoney(remaining)}</div>
+          <div className="lb-balance">{formatMoney(displayTotals.remaining)}</div>
           <div className="lb-totals">
             <div>
               <p className="lb-muted">Income</p>
-              <strong>{formatMoney(totalIncome)}</strong>
+              <strong>{formatMoney(displayTotals.income)}</strong>
             </div>
             <div>
               <p className="lb-muted">Expenses</p>
-              <strong>{formatMoney(totalExpenses)}</strong>
+              <strong>{formatMoney(displayTotals.expenses)}</strong>
             </div>
           </div>
         </article>
@@ -139,21 +275,120 @@ function DashboardPage() {
               <span className="lb-dot expense" /> Expenses
             </div>
           </div>
-          <div className="lb-chart lb-empty-panel">
-            <p className="lb-empty">Add transactions to see the chart.</p>
-          </div>
+          {transactions.length === 0 ? (
+            <div className="lb-chart lb-empty-panel">
+              <p className="lb-empty">Add transactions to see the chart.</p>
+            </div>
+          ) : (
+            <div className="lb-chart lb-chart-months">
+              {(() => {
+                const months = Array.from({ length: 4 }, (_, index) => {
+                  const date = new Date(selectedMonthDate);
+                  date.setMonth(date.getMonth() - (3 - index));
+                  return date;
+                });
+
+                const buckets = months.map((date) => ({
+                  key: `${date.getFullYear()}-${date.getMonth()}`,
+                  label: date.toLocaleDateString("en-US", { month: "short" }),
+                  income: 0,
+                  expenses: 0,
+                }));
+
+                const bucketMap = new Map(buckets.map((b) => [b.key, b]));
+
+                transactions.forEach((tx) => {
+                  const key = getMonthKey(tx.dateUtc || tx.date || tx.createdAt);
+                  if (!key || !bucketMap.has(key)) return;
+                  const amount = parseTransactionAmount(tx);
+                  if (!Number.isFinite(amount) || amount === 0) return;
+
+                  if (tx.type === "income") {
+                    bucketMap.get(key).income += Math.abs(amount);
+                  } else if (tx.type === "expense") {
+                    bucketMap.get(key).expenses += Math.abs(amount);
+                  } else {
+                    if (amount > 0) bucketMap.get(key).income += amount;
+                    if (amount < 0) bucketMap.get(key).expenses += Math.abs(amount);
+                  }
+                });
+
+                const maxValue = Math.max(
+                  1,
+                  ...buckets.map((b) => Math.max(b.income, b.expenses))
+                );
+
+                const calcHeight = (value) => {
+                  if (value <= 0) return 0;
+                  const pct = Math.round((value / maxValue) * 100);
+                  return Math.max(6, pct);
+                };
+
+                return buckets.map((bucket) => (
+                  <div key={bucket.key} className="lb-bar-group">
+                    <div className="lb-bar-stack">
+                      <span
+                        className="lb-bar income"
+                        style={{ height: `${calcHeight(bucket.income)}%` }}
+                      />
+                      <span
+                        className="lb-bar expense"
+                        style={{ height: `${calcHeight(bucket.expenses)}%` }}
+                      />
+                    </div>
+                    <span className="lb-bar-label">{bucket.label}</span>
+                  </div>
+                ));
+              })()}
+            </div>
+          )}
         </article>
 
         <article className="lb-card">
           <div className="lb-card-header">
             <h2>Upcoming Bills</h2>
-            <button className="lb-link" type="button">
+            <button
+              className="lb-link"
+              type="button"
+              onClick={() => navigate("/app/bills")}
+            >
               View All
             </button>
           </div>
-          <div className="lb-empty-panel">
-            <p className="lb-empty">No bills yet.</p>
-          </div>
+          {!userId ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">Please log in to see your bills.</p>
+            </div>
+          ) : billsLoading ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">Loading bills...</p>
+            </div>
+          ) : billsError ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">{billsError}</p>
+            </div>
+          ) : upcomingBills.length === 0 ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">No upcoming bills.</p>
+            </div>
+          ) : (
+            <ul className="lb-bills-list">
+              {upcomingBills.map((bill) => {
+                const key = bill.id || bill._id || bill.name;
+                return (
+                  <li key={key}>
+                    <span className="lb-bill-name">{bill.name}</span>
+                    <span className="lb-bill-due">
+                      Due {formatDueDate(bill.dueDate)}
+                    </span>
+                    <strong className="lb-bill-amount">
+                      {formatMoney(Number(bill.amount) || 0)}
+                    </strong>
+                  </li>
+                );
+              })}
+            </ul>
+          )}
         </article>
       </section>
 
@@ -225,54 +460,62 @@ function DashboardPage() {
               </div>
             </div>
           </article>
+        </div>
+      </section>
 
-          <article className="lb-card">
-            <div className="lb-card-header">
-              <h2>Savings Goals</h2>
-              <button
-                className="lb-link"
-                type="button"
-                onClick={() => navigate("/app/goals")}
-              >
-                View All
-              </button>
+      <section className="lb-grid lb-grid-full">
+        <article className="lb-card lb-card-full">
+          <div className="lb-card-header">
+            <h2>Savings Goals</h2>
+            <button
+              className="lb-link"
+              type="button"
+              onClick={() => navigate("/app/goals")}
+            >
+              View All
+            </button>
+          </div>
+          {!userId ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">Log in to see your goals.</p>
             </div>
-            {!userId ? (
-              <div className="lb-empty-panel">
-                <p className="lb-empty">Log in to see your goals.</p>
-              </div>
-            ) : goalsLoading ? (
-              <div className="lb-empty-panel">
-                <p className="lb-empty">Loading goals...</p>
-              </div>
-            ) : goalsError ? (
-              <div className="lb-empty-panel">
-                <p className="lb-empty">{goalsError}</p>
-              </div>
-            ) : goals.length === 0 ? (
-              <div className="lb-empty-panel">
-                <p className="lb-empty">No goals yet. Create one to get started.</p>
-              </div>
-            ) : (
-              <div className="lb-summary-list">
-                <div>
-                  <span>Total Saved</span>
-                  <strong>
-                    {formatMoney(goalsSummary.totalCurrent)}
-                  </strong>
+          ) : goalsLoading ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">Loading goals...</p>
+            </div>
+          ) : goalsError ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">{goalsError}</p>
+            </div>
+          ) : goals.length === 0 ? (
+            <div className="lb-empty-panel">
+              <p className="lb-empty">No goals yet. Create one to get started.</p>
+            </div>
+          ) : (
+            <div className="lb-goals-grid">
+              <div className="lb-goals-summary">
+                <div className="lb-summary-list">
+                  <div>
+                    <span>Total Saved</span>
+                    <strong>
+                      {formatMoney(goalsSummary.totalCurrent)}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Total Target</span>
+                    <strong>
+                      {formatMoney(goalsSummary.totalTarget)}
+                    </strong>
+                  </div>
+                  <div>
+                    <span>Overall Progress</span>
+                    <strong className="lb-success">
+                      {goalsSummary.completionPercent}%
+                    </strong>
+                  </div>
                 </div>
-                <div>
-                  <span>Total Target</span>
-                  <strong>
-                    {formatMoney(goalsSummary.totalTarget)}
-                  </strong>
-                </div>
-                <div>
-                  <span>Overall Progress</span>
-                  <strong className="lb-success">
-                    {goalsSummary.completionPercent}%
-                  </strong>
-                </div>
+              </div>
+              <div className="lb-goals-list">
                 {goals.slice(0, 3).map((goal) => {
                   const key = goal.id || goal._id || goal.name;
                   const target = Number(goal.targetAmount || 0);
@@ -299,9 +542,9 @@ function DashboardPage() {
                   );
                 })}
               </div>
-            )}
-          </article>
-        </div>
+            </div>
+          )}
+        </article>
       </section>
     </>
   );

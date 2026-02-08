@@ -1,26 +1,27 @@
 import { useState } from "react";
 
-function BillForm({ onAdd }) {
-  const [name, setName] = useState("");
-  const [amount, setAmount] = useState("");
-  const [dueDay, setDueDay] = useState("");
-  const [isRecurring, setIsRecurring] = useState(false);
+function BillForm({ onSubmit, initialValues, submitLabel, onCancel }) {
+  const [name, setName] = useState(initialValues?.name || "");
+  const [amount, setAmount] = useState(
+    initialValues?.amount !== undefined ? String(initialValues.amount) : ""
+  );
+  const [dueDay, setDueDay] = useState(
+    initialValues?.dueDay !== undefined ? String(initialValues.dueDay) : ""
+  );
+  const [isRecurring, setIsRecurring] = useState(
+    Boolean(initialValues?.isRecurring)
+  );
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    onAdd({
+
+    onSubmit({
       name,
       amount: Number(amount),
       dueDay: Number(dueDay),
-      status: "upcoming",
+      status: initialValues?.status || "unpaid",
       isRecurring,
     });
-
-    setName("");
-    setAmount("");
-    setDueDay("");
-    setIsRecurring(false);
   };
 
   return (
@@ -62,29 +63,56 @@ function BillForm({ onAdd }) {
           onChange={(e) => setDueDay(e.target.value)}
           required
         />
-        <small style={{ color: '#6b7280', fontSize: '0.8rem', marginTop: '4px', display: 'block' }}>
+        <small
+          style={{
+            color: "#6b7280",
+            fontSize: "0.8rem",
+            marginTop: "4px",
+            display: "block",
+          }}
+        >
           Enter a day between 1-31
         </small>
       </div>
 
       <div className="form-group">
-        <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+        <label
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "8px",
+            cursor: "pointer",
+          }}
+        >
           <input
             type="checkbox"
             checked={isRecurring}
             onChange={(e) => setIsRecurring(e.target.checked)}
-            style={{ width: 'auto', cursor: 'pointer' }}
+            style={{ width: "auto", cursor: "pointer" }}
           />
           <span>Recurring bill</span>
         </label>
-        <small style={{ color: '#6b7280', fontSize: '0.8rem', marginTop: '4px', display: 'block', marginLeft: '28px' }}>
+        <small
+          style={{
+            color: "#6b7280",
+            fontSize: "0.8rem",
+            marginTop: "4px",
+            display: "block",
+            marginLeft: "28px",
+          }}
+        >
           Check if this bill repeats every month
         </small>
       </div>
 
       <div className="form-actions">
+        {onCancel ? (
+          <button type="button" className="btn-secondary" onClick={onCancel}>
+            Cancel
+          </button>
+        ) : null}
         <button type="submit" className="btn-submit">
-          Add Bill
+          {submitLabel || "Save Bill"}
         </button>
       </div>
     </form>
