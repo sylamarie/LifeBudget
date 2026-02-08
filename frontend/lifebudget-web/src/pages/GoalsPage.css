@@ -1,0 +1,132 @@
+.lb-goals-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.lb-control-pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: #f1f4f1;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.lb-goals-summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.lb-goals-grid {
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  margin-bottom: 18px;
+}
+
+.lb-goal-card {
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 16px;
+  padding: 14px;
+  background: #fff;
+  display: grid;
+  gap: 10px;
+}
+
+.lb-goals-lower {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.lb-goals-chart,
+.lb-goals-alerts {
+  border: 1px solid rgba(46, 125, 50, 0.12);
+  border-radius: 16px;
+  padding: 16px;
+  background: #fff;
+  display: grid;
+  gap: 16px;
+}
+
+.lb-goals-chart {
+  grid-template-columns: 220px 1fr;
+  align-items: center;
+}
+
+.lb-pie-chart {
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  margin: 0 auto;
+  background: conic-gradient(
+    #6fb37a 0% 22%,
+    #9ccf9e 22% 36%,
+    #6fa3a6 36% 48%,
+    #f1b57d 48% 62%,
+    #d98c6a 62% 78%,
+    #c7d9c8 78% 100%
+  );
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.lb-pie-center {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  box-shadow: inset 0 0 0 1px rgba(46, 125, 50, 0.08);
+}
+
+.lb-pie-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.lb-pie-sub {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.lb-pie-legend {
+  display: grid;
+  gap: 10px;
+}
+
+.lb-pie-legend div {
+  display: grid;
+  grid-template-columns: 14px 1fr auto;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+}
+
+.lb-dot-label {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.lb-dot-label.groceries { background: #6fb37a; }
+.lb-dot-label.housing { background: #9ccf9e; }
+.lb-dot-label.dining { background: #6fa3a6; }
+.lb-dot-label.entertainment { background: #f1b57d; }
+.lb-dot-label.transportation { background: #d98c6a; }
+.lb-dot-label.other { background: #c7d9c8; }
+
+.lb-legend-amount {
+  font-weight: 600;
+}
+
+.lb-goals-alerts h3 {
+  margin: 0;
+}
