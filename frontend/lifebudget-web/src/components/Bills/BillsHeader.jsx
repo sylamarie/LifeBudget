@@ -1,11 +1,11 @@
 function BillsHeader({ onAdd }) {
   return (
-    <div className="bills-header">
-      <h1>Bills & Reminders</h1>
-      <button className="btn-primary" onClick={onAdd}>
+    <>
+      <h2>Bills</h2>
+      <button className="btn-primary add-bill-btn" onClick={onAdd}>
         Add Bill
       </button>
-    </div>
+    </>
   );
 }
 

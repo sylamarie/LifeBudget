@@ -26,4 +26,7 @@ public class Bill
 
     [BsonElement("isRecurring")]
     public bool IsRecurring { get; set; } = false;
+
+    [BsonElement("lastPaidUtc")]
+    public DateTime? LastPaidUtc { get; set; }
 }

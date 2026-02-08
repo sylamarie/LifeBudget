@@ -41,15 +41,10 @@ builder.Services.AddSingleton(sp =>
 
 builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddSingleton<TransactionRepository>();
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-builder.Services.AddSingleton<BillRepository>();
->>>>>>> feature/frontend-docs
-=======
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
->>>>>>> 99d44fb5208103262f75752423cf5962d8c3fdc1
+builder.Services.AddSingleton<GoalRepository>();
+builder.Services.AddSingleton<BillRepository>();
 
 var app = builder.Build();
 

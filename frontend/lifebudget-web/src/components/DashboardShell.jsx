@@ -25,6 +25,7 @@ function DashboardShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
+  const [monthOffset, setMonthOffset] = useState(0);
   const copy = headerCopy[location.pathname] || headerCopy["/"];
   const showMonthButton = location.pathname === "/app";
   const displayName =
@@ -37,6 +38,14 @@ function DashboardShell() {
     localStorage.removeItem("lifebudgetEmail");
     navigate("/login");
   };
+
+  const selectedMonthDate = new Date();
+  selectedMonthDate.setDate(1);
+  selectedMonthDate.setMonth(selectedMonthDate.getMonth() + monthOffset);
+  const monthLabel = selectedMonthDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
 
   return (
     <div className="lb-app">
@@ -121,13 +130,29 @@ function DashboardShell() {
               <h1>{copy.title}</h1>
             </div>
             {showMonthButton ? (
-              <button className="lb-ghost" type="button">
-                This Month 
-              </button>
+              <div className="lb-month-nav" role="group" aria-label="Month navigation">
+                <button
+                  className="lb-ghost"
+                  type="button"
+                  onClick={() => setMonthOffset((prev) => prev - 1)}
+                  aria-label="Previous month"
+                >
+                  ◀
+                </button>
+                <span className="lb-month-label">{monthLabel}</span>
+                <button
+                  className="lb-ghost"
+                  type="button"
+                  onClick={() => setMonthOffset((prev) => prev + 1)}
+                  aria-label="Next month"
+                >
+                  ▶
+                </button>
+              </div>
             ) : null}
           </div>
 
-          <Outlet />
+          <Outlet context={{ monthOffset, monthLabel }} />
         </main>
       </div>
     </div>

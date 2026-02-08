@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 import { useEffect, useMemo, useState } from "react";
->>>>>>> 99d44fb5208103262f75752423cf5962d8c3fdc1
 import "./GoalsPage.css";
 import "../components/DashboardShell.css";
 
@@ -358,13 +354,6 @@ function GoalsPage() {
       </div>
     </section>
   );
-<<<<<<< HEAD
-=======
-function GoalsPage() {
-  return <p className="lb-empty">This is the goals page.</p>;
->>>>>>> feature/frontend-docs
-=======
->>>>>>> 99d44fb5208103262f75752423cf5962d8c3fdc1
 }
 
 export default GoalsPage;

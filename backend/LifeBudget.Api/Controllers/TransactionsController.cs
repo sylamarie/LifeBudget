@@ -87,12 +87,4 @@ public class TransactionsController : ControllerBase
         var deleted = await _transactions.DeleteAsync(id, userId);
         return deleted ? NoContent() : NotFound();
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> feature/frontend-docs
-=======
-}
->>>>>>> 99d44fb5208103262f75752423cf5962d8c3fdc1

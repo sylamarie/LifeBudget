@@ -1,29 +1,50 @@
 import BillRow from "./BillRow";
 
-function BillsTable({ bills }) {
+function BillsTable({
+  bills,
+  onToggleStatus,
+  onEdit,
+  onDelete,
+  showActions,
+  showToggle,
+}) {
   return (
-    <table className="bills-table">
-      <thead>
-        <tr>
-          <th>Bill</th>
-          <th>Due Date</th>
-          <th>Amount</th>
-          <th>Frequency</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-      <tbody>
-        {bills.length === 0 ? (
+    <div className="bills-table-wrap">
+      <table className="bills-table">
+        <thead>
           <tr>
-            <td colSpan="5" className="empty">
-              No bills to display
-            </td>
+            <th>Bill</th>
+            <th>Due Date</th>
+            <th>Amount</th>
+            <th>Frequency</th>
+            <th>Status</th>
+            {showActions ? <th>Actions</th> : null}
           </tr>
-        ) : (
-          bills.map((bill) => <BillRow key={bill.id} bill={bill} />)
-        )}
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          {bills.length === 0 ? (
+            <tr>
+              <td colSpan={showActions ? 6 : 5} className="empty">
+                No bills to display.
+              </td>
+            </tr>
+          ) : (
+            bills.map((bill) => (
+              <BillRow
+                key={bill.id || bill._id || bill.Id || bill.name}
+                bill={bill}
+                onToggleStatus={onToggleStatus}
+                isTransitioning={(bill.statusTransitionUntil || 0) > Date.now()}
+                onEdit={onEdit}
+                onDelete={onDelete}
+                showActions={showActions}
+                showToggle={showToggle}
+              />
+            ))
+          )}
+        </tbody>
+      </table>
+    </div>
   );
 }
 

@@ -42,7 +42,9 @@ public class BillsController : ControllerBase
             Name = request.Name.Trim(),
             Amount = request.Amount,
             DueDay = request.DueDay,
-            IsRecurring = request.IsRecurring
+            IsRecurring = request.IsRecurring,
+            Status = "unpaid",
+            LastPaidUtc = null
         };
 
         var created = await _bills.CreateAsync(bill);
@@ -57,5 +59,57 @@ public class BillsController : ControllerBase
 
         var deleted = await _bills.DeleteAsync(id, userId);
         return deleted ? NoContent() : NotFound();
+    }
+
+    [HttpPut("{id}/status")]
+    [HttpPost("{id}/status")]
+    public async Task<IActionResult> UpdateStatus(string id, UpdateBillStatusRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserId))
+            return BadRequest("userId is required.");
+        if (string.IsNullOrWhiteSpace(request.Status))
+            return BadRequest("status is required.");
+
+        var status = request.Status.Trim().ToLowerInvariant();
+        if (status is not ("paid" or "upcoming" or "unpaid"))
+            return BadRequest("status must be paid, upcoming, or unpaid.");
+
+        var lastPaidUtc = status == "paid" ? DateTime.UtcNow : null;
+        if (status == "upcoming") status = "unpaid";
+
+        var updated = await _bills.UpdateStatusAsync(id, request.UserId.Trim(), status, lastPaidUtc);
+        return updated == null ? NotFound() : Ok(updated);
+    }
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, UpdateBillRequest request)
+    {
+        if (string.IsNullOrWhiteSpace(request.UserId))
+            return BadRequest("userId is required.");
+        if (string.IsNullOrWhiteSpace(request.Name))
+            return BadRequest("Name is required.");
+        if (request.Amount <= 0)
+            return BadRequest("Amount must be greater than 0.");
+
+        var status = string.IsNullOrWhiteSpace(request.Status)
+            ? "unpaid"
+            : request.Status.Trim().ToLowerInvariant();
+        if (status is not ("paid" or "upcoming" or "unpaid"))
+            return BadRequest("status must be paid, upcoming, or unpaid.");
+        if (status == "upcoming") status = "unpaid";
+
+        var bill = new Bill
+        {
+            UserId = request.UserId.Trim(),
+            Name = request.Name.Trim(),
+            Amount = request.Amount,
+            DueDay = request.DueDay,
+            IsRecurring = request.IsRecurring,
+            Status = status,
+            LastPaidUtc = status == "paid" ? DateTime.UtcNow : null
+        };
+
+        var updated = await _bills.UpdateAsync(id, request.UserId.Trim(), bill);
+        return updated == null ? NotFound() : Ok(updated);
     }
 }

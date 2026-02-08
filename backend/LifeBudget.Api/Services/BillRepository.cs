@@ -34,4 +34,37 @@ public class BillRepository
 
         return result.DeletedCount > 0;
     }
+
+    public async Task<Bill?> UpdateStatusAsync(string id, string userId, string status, DateTime? lastPaidUtc)
+    {
+        var filter = Builders<Bill>.Filter.Where(b => b.Id == id && b.UserId == userId);
+        var update = Builders<Bill>.Update
+            .Set(b => b.Status, status)
+            .Set(b => b.LastPaidUtc, lastPaidUtc);
+        var options = new FindOneAndUpdateOptions<Bill>
+        {
+            ReturnDocument = ReturnDocument.After
+        };
+
+        return await _bills.FindOneAndUpdateAsync(filter, update, options);
+    }
+
+    public async Task<Bill?> UpdateAsync(string id, string userId, Bill update)
+    {
+        var filter = Builders<Bill>.Filter.Where(b => b.Id == id && b.UserId == userId);
+        var updateDef = Builders<Bill>.Update
+            .Set(b => b.Name, update.Name)
+            .Set(b => b.Amount, update.Amount)
+            .Set(b => b.DueDay, update.DueDay)
+            .Set(b => b.IsRecurring, update.IsRecurring)
+            .Set(b => b.Status, update.Status)
+            .Set(b => b.LastPaidUtc, update.LastPaidUtc);
+
+        var options = new FindOneAndUpdateOptions<Bill>
+        {
+            ReturnDocument = ReturnDocument.After
+        };
+
+        return await _bills.FindOneAndUpdateAsync(filter, updateDef, options);
+    }
 }
