@@ -335,3 +335,33 @@
 .btn-submit:active {
   transform: translateY(0);
 }
+
+@media (max-width: 900px) {
+  .bills-summary {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 600px) {
+  .bills-tabs {
+    gap: 8px;
+  }
+
+  .bills-table-wrap {
+    overflow-x: auto;
+  }
+
+  .bills-table {
+    min-width: 520px;
+  }
+
+  .bills-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .form-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

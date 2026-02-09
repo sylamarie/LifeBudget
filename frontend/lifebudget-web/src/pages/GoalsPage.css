@@ -175,3 +175,43 @@
   color: #1f3b25;
   font-weight: 600;
 }
+
+@media (max-width: 900px) {
+  .lb-goal-form {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-goals-chart {
+    grid-template-columns: 1fr;
+    justify-items: center;
+  }
+}
+
+@media (max-width: 600px) {
+  .lb-goals-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lb-goals-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-goals-lower {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-pie-chart {
+    width: 150px;
+    height: 150px;
+  }
+
+  .lb-pie-center {
+    width: 86px;
+    height: 86px;
+  }
+
+  .lb-pie-value {
+    font-size: 1.1rem;
+  }
+}
