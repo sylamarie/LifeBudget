@@ -80,11 +80,7 @@ function DashboardPage() {
 
   const displayTotals = hasMonthTransactions
     ? { income: totalIncome, expenses: totalExpenses, remaining }
-    : {
-        income: totalIncomeAll,
-        expenses: totalExpensesAll,
-        remaining: totalIncomeAll - totalExpensesAll,
-      };
+    : { income: 0, expenses: 0, remaining: 0 };
 
   const formatMoney = (value) =>
     value.toLocaleString("en-US", { style: "currency", currency: "USD" });
@@ -248,11 +244,7 @@ function DashboardPage() {
         <article className="lb-card">
           <div className="lb-card-header">
             <h2>Overall Balance</h2>
-            <span className="lb-muted">
-              {hasMonthTransactions || transactions.length === 0
-                ? monthLabel
-                : "All Time"}
-            </span>
+            <span className="lb-muted">{monthLabel}</span>
           </div>
           <div className="lb-balance">{formatMoney(displayTotals.remaining)}</div>
           <div className="lb-totals">

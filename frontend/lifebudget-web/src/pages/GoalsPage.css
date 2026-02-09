@@ -69,12 +69,21 @@
   padding: 16px;
   background: #fff;
   display: grid;
-  gap: 16px;
+  gap: 12px;
 }
 
 .lb-goals-chart {
   grid-template-columns: 220px 1fr;
   align-items: center;
+}
+
+.lb-goals-alerts {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+}
+
+.lb-goals-alerts .lb-empty-panel {
+  height: 100%;
 }
 
 .lb-pie-chart {
@@ -149,4 +158,20 @@
 
 .lb-goals-alerts h3 {
   margin: 0;
+  grid-column: 1 / -1;
+}
+
+.lb-goals-alerts .lb-empty-panel {
+  background: linear-gradient(135deg, #f3f8f4, #ffffff);
+  border: 1px solid rgba(46, 125, 50, 0.18);
+  box-shadow: 0 8px 16px rgba(31, 58, 40, 0.08);
+  padding: 8px 12px;
+  min-height: 44px;
+  place-items: start;
+}
+
+.lb-goals-alerts .lb-empty {
+  font-style: normal;
+  color: #1f3b25;
+  font-weight: 600;
 }

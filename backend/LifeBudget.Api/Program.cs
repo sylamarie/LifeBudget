@@ -43,6 +43,7 @@ builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddSingleton<TransactionRepository>();
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
+builder.Services.AddSingleton<BudgetRepository>();
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
 

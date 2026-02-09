@@ -74,7 +74,7 @@ public class BillsController : ControllerBase
         if (status is not ("paid" or "upcoming" or "unpaid"))
             return BadRequest("status must be paid, upcoming, or unpaid.");
 
-        var lastPaidUtc = status == "paid" ? DateTime.UtcNow : null;
+        DateTime? lastPaidUtc = status == "paid" ? DateTime.UtcNow : null;
         if (status == "upcoming") status = "unpaid";
 
         var updated = await _bills.UpdateStatusAsync(id, request.UserId.Trim(), status, lastPaidUtc);

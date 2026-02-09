@@ -6,7 +6,6 @@ import TransactionsPage from "./pages/TransactionsPage";
 import BillsPage from "./pages/BillsPage";
 import GoalsPage from "./pages/GoalsPage";
 import InsightsPage from "./pages/InsightsPage";
-import SettingsPage from "./pages/SettingsPage";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "./App.css";
 import "./styles/theme.css";
@@ -24,7 +23,6 @@ function App() {
             <Route path="bills" element={<BillsPage />} />
             <Route path="goals" element={<GoalsPage />} />
             <Route path="insights" element={<InsightsPage />} />
-            <Route path="settings" element={<SettingsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
