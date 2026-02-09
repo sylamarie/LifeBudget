@@ -3,6 +3,14 @@ import "./GoalsPage.css";
 import "../components/DashboardShell.css";
 
 const PIE_COLORS = ["groceries", "housing", "dining", "entertainment", "transportation", "other"];
+const PIE_COLOR_MAP = {
+  groceries: "#6fb37a",
+  housing: "#9ccf9e",
+  dining: "#6fa3a6",
+  entertainment: "#f1b57d",
+  transportation: "#d98c6a",
+  other: "#c7d9c8",
+};
 
 function GoalsPage() {
   const [goals, setGoals] = useState([]);
@@ -157,23 +165,28 @@ function GoalsPage() {
     }
   };
 
+  const toNumber = (value) => {
+    const num = Number(value);
+    return Number.isFinite(num) ? num : 0;
+  };
+
   const { totalSaved, totalTarget, completionPercent } = useMemo(() => {
     if (!goals.length) {
       return { totalSaved: 0, totalTarget: 0, completionPercent: 0 };
     }
     const target = goals.reduce(
-      (sum, g) => sum + Number(g.targetAmount || 0),
+      (sum, g) => sum + toNumber(g.targetAmount),
       0
     );
     const current = goals.reduce(
-      (sum, g) => sum + Number(g.currentAmount || 0),
+      (sum, g) => sum + toNumber(g.currentAmount),
       0
     );
     const pct = target > 0 ? Math.min((current / target) * 100, 100) : 0;
     return {
       totalSaved: current,
       totalTarget: target,
-      completionPercent: Math.round(pct),
+      completionPercent: pct,
     };
   }, [goals]);
 
@@ -181,6 +194,32 @@ function GoalsPage() {
     value.toLocaleString("en-US", { style: "currency", currency: "USD" });
 
   const goalsForLegend = goals.slice(0, PIE_COLORS.length);
+  const pieTotal = goalsForLegend.reduce(
+    (sum, goal) => sum + toNumber(goal.currentAmount),
+    0
+  );
+  const piePercent =
+    totalTarget > 0 ? Math.min((totalSaved / totalTarget) * 100, 100) : 0;
+
+  const pieGradient = useMemo(() => {
+    if (!goalsForLegend.length || pieTotal <= 0) {
+      return "conic-gradient(#e5efe7 0% 100%)";
+    }
+
+    let start = 0;
+    const segments = goalsForLegend.map((goal, index) => {
+      const value = toNumber(goal.currentAmount);
+      const pct = pieTotal > 0 ? (value / pieTotal) * 100 : 0;
+      const end = start + pct;
+      const colorKey = PIE_COLORS[index];
+      const color = PIE_COLOR_MAP[colorKey] || "#e5efe7";
+      const segment = `${color} ${start.toFixed(2)}% ${end.toFixed(2)}%`;
+      start = end;
+      return segment;
+    });
+
+    return `conic-gradient(${segments.join(", ")})`;
+  }, [goalsForLegend, pieTotal]);
 
   return (
     <section className="lb-card">
@@ -245,11 +284,10 @@ function GoalsPage() {
       </form>
 
       <div className="lb-goals-summary">
-        <span className="lb-muted">Total Saved</span>
-        <span className="lb-pill">
-          {formatMoney(totalSaved)}{" "}
-          {totalTarget > 0 ? `of ${formatMoney(totalTarget)}` : ""}
+        <span className="lb-muted">
+          Overall Progress (% of all goals completed by total amount saved)
         </span>
+        <span className="lb-pill">{completionPercent.toFixed(2)}%</span>
       </div>
 
       {loading ? (
@@ -270,8 +308,8 @@ function GoalsPage() {
         <div className="lb-goals-grid">
           {goals.map((goal) => {
             const key = goal.id || goal._id || goal.name;
-            const target = Number(goal.targetAmount || 0);
-            const current = Number(goal.currentAmount || 0);
+            const target = toNumber(goal.targetAmount);
+            const current = toNumber(goal.currentAmount);
             const pct =
               target > 0 ? Math.min((current / target) * 100, 100) : 0;
             return (
@@ -313,9 +351,13 @@ function GoalsPage() {
 
       <div className="lb-goals-lower">
         <div className="lb-goals-chart">
-          <div className="lb-pie-chart">
+          <div
+            className="lb-pie-chart"
+            style={{ background: pieGradient }}
+            title="Overall progress = total saved ÷ total target"
+          >
             <div className="lb-pie-center">
-              <span className="lb-pie-value">{completionPercent}%</span>
+              <span className="lb-pie-value">{piePercent.toFixed(2)}%</span>
               <span className="lb-pie-sub">Overall</span>
             </div>
           </div>
@@ -323,17 +365,22 @@ function GoalsPage() {
             {goalsForLegend.length === 0 ? (
               <p className="lb-empty">Add goals to see breakdown.</p>
             ) : (
-              goalsForLegend.map((goal, index) => (
-                <div key={goal.id || goal._id || goal.name}>
-                  <span
-                    className={`lb-dot-label ${PIE_COLORS[index]}`}
-                  />
-                  <span>{goal.name}</span>
-                  <span className="lb-legend-amount">
-                    {formatMoney(Number(goal.currentAmount || 0))}
-                  </span>
-                </div>
-              ))
+              goalsForLegend.map((goal, index) => {
+                const value = toNumber(goal.currentAmount);
+                const pct =
+                  pieTotal > 0 ? Math.round((value / pieTotal) * 100) : 0;
+                return (
+                  <div key={goal.id || goal._id || goal.name}>
+                    <span
+                      className={`lb-dot-label ${PIE_COLORS[index]}`}
+                    />
+                    <span>{goal.name}</span>
+                    <span className="lb-legend-amount">
+                    {formatMoney(value)} ({pct}%)
+                    </span>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>
@@ -348,6 +395,26 @@ function GoalsPage() {
           <div className="lb-empty-panel">
             <p className="lb-empty">
               Consider adding a monthly transfer to keep progress steady.
+            </p>
+          </div>
+          <div className="lb-empty-panel">
+            <p className="lb-empty">
+              Automate savings right after payday to build momentum.
+            </p>
+          </div>
+          <div className="lb-empty-panel">
+            <p className="lb-empty">
+              Review goals monthly and adjust targets based on income changes.
+            </p>
+          </div>
+          <div className="lb-empty-panel">
+            <p className="lb-empty">
+              Split large goals into short-term checkpoints for faster wins.
+            </p>
+          </div>
+          <div className="lb-empty-panel">
+            <p className="lb-empty">
+              Track a “buffer” goal for unexpected expenses.
             </p>
           </div>
         </div>

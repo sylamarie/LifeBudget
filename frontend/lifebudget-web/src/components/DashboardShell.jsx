@@ -8,7 +8,6 @@ const navItems = [
   { label: "Bills", to: "/app/bills", icon: "/images/bills.svg" },
   { label: "Goals", to: "/app/goals", icon: "/images/goals.svg" },
   { label: "Insights", to: "/app/insights", icon: "/images/insights.svg" },
-  { label: "Settings", to: "/app/settings", icon: "/images/settings.svg" },
   { label: "Logout", action: "logout", icon: "/images/logout.svg" },
 ];
 
@@ -18,7 +17,6 @@ const headerCopy = {
   "/app/bills": { kicker: "Bills", title: "Bills" },
   "/app/goals": { kicker: "Goals", title: "Goals" },
   "/app/insights": { kicker: "Insights", title: "Insights" },
-  "/app/settings": { kicker: "Settings", title: "Settings" },
 };
 
 function DashboardShell() {
