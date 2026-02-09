@@ -23,6 +23,7 @@ function DashboardShell() {
   const location = useLocation();
   const navigate = useNavigate();
   const [showProfile, setShowProfile] = useState(false);
+  const [showNav, setShowNav] = useState(false);
   const [monthOffset, setMonthOffset] = useState(0);
   const copy = headerCopy[location.pathname] || headerCopy["/"];
   const showMonthButton = location.pathname === "/app";
@@ -49,6 +50,14 @@ function DashboardShell() {
     <div className="lb-app">
       <header className="lb-topbar">
         <div className="lb-brand">
+          <button
+            className="lb-icon-btn lb-hamburger"
+            type="button"
+            aria-label="Open navigation"
+            onClick={() => setShowNav(true)}
+          >
+            <span className="lb-hamburger-lines" aria-hidden="true" />
+          </button>
           <img className="lb-logo-image" src="/images/logo.svg" alt="LifeBudget" />
           <span className="lb-brand-text">LifeBudget</span>
         </div>
@@ -71,7 +80,7 @@ function DashboardShell() {
       </header>
 
       <div className="lb-body">
-        <aside className="lb-sidebar">
+        <aside className={`lb-sidebar ${showNav ? "open" : ""}`}>
           <div className="lb-sidebar-inner">
             {navItems.map((item) => {
               if (item.action === "logout") {
@@ -80,7 +89,10 @@ function DashboardShell() {
                     key={item.label}
                     className="lb-nav-item lb-logout"
                     type="button"
-                    onClick={handleLogout}
+                    onClick={() => {
+                      setShowNav(false);
+                      handleLogout();
+                    }}
                   >
                     <span className="lb-nav-icon" aria-hidden="true">
                       {item.icon ? (
@@ -104,6 +116,7 @@ function DashboardShell() {
                   className={({ isActive }) =>
                     `lb-nav-item ${isActive ? "active" : ""}`
                   }
+                  onClick={() => setShowNav(false)}
                 >
                   <span className="lb-nav-icon" aria-hidden="true">
                     {item.icon ? (
@@ -120,6 +133,14 @@ function DashboardShell() {
             })}
           </div>
         </aside>
+        {showNav ? (
+          <button
+            className="lb-nav-backdrop"
+            type="button"
+            aria-label="Close navigation"
+            onClick={() => setShowNav(false)}
+          />
+        ) : null}
 
         <main className="lb-main">
           <div className="lb-main-header">

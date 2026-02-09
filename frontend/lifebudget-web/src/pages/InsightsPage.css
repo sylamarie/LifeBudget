@@ -193,3 +193,39 @@
   gap: 16px;
   justify-content: flex-end;
 }
+
+@media (max-width: 900px) {
+  .lb-insights-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .lb-insights-filters {
+    flex-wrap: wrap;
+  }
+
+  .lb-budget-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .lb-insights-kpis {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-insights-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lb-insight-chart {
+    grid-template-columns: repeat(6, minmax(32px, 1fr));
+    padding: 12px 10px 30px;
+    gap: 8px;
+  }
+
+  .lb-budget-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
