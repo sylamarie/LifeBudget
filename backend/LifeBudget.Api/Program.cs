@@ -13,9 +13,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        var allowedOrigins = new List<string> { "http://localhost:5173" };
+        
+        // Add production frontend URL from environment variable
+        var productionUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+        if (!string.IsNullOrWhiteSpace(productionUrl))
+        {
+            allowedOrigins.Add(productionUrl);
+        }
+        
+        policy.WithOrigins(allowedOrigins.ToArray())
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
@@ -44,8 +54,7 @@ builder.Services.AddSingleton<TransactionRepository>();
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
 builder.Services.AddSingleton<BudgetRepository>();
-builder.Services.AddSingleton<GoalRepository>();
-builder.Services.AddSingleton<BillRepository>();
+
 
 var app = builder.Build();
 
@@ -80,7 +89,8 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 });
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
