@@ -54,8 +54,7 @@ builder.Services.AddSingleton<TransactionRepository>();
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
 builder.Services.AddSingleton<BudgetRepository>();
-builder.Services.AddSingleton<GoalRepository>();
-builder.Services.AddSingleton<BillRepository>();
+
 
 var app = builder.Build();
 
@@ -90,7 +89,8 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 });
 
-app.Run();
+var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+app.Run($"http://0.0.0.0:{port}");
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
