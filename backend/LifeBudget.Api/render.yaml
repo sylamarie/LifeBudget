@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: lifebudget-api
+    env: dotnet
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/LifeBudget.Api.dll
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:$PORT
+      - key: MONGODB_URI
+        sync: false
+      - key: FRONTEND_URL
+        sync: false

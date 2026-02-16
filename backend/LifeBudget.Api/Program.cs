@@ -13,9 +13,19 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", policy =>
     {
-        policy.WithOrigins("http://localhost:5173")
+        var allowedOrigins = new List<string> { "http://localhost:5173" };
+        
+        // Add production frontend URL from environment variable
+        var productionUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
+        if (!string.IsNullOrWhiteSpace(productionUrl))
+        {
+            allowedOrigins.Add(productionUrl);
+        }
+        
+        policy.WithOrigins(allowedOrigins.ToArray())
             .AllowAnyHeader()
-            .AllowAnyMethod();
+            .AllowAnyMethod()
+            .AllowCredentials();
     });
 });
 
