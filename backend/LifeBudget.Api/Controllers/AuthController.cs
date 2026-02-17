@@ -25,15 +25,16 @@ public class AuthController : ControllerBase
         var lastName = request.LastName?.Trim() ?? string.Empty;
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            return BadRequest("Email and password are required.");
+            return BadRequest(new { success = false, message = "Email and password are required." });
+
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
-            return BadRequest("First name and last name are required.");
+            return BadRequest(new { success = false, message = "First name and last name are required." });
 
         var existing = await _users.FindByEmailAsync(email);
         if (existing != null)
-            return BadRequest("Email already exists.");
+            return BadRequest(new { success = false, message = "Email already exists." });
 
-        // will hash later
+        // TODO: hash password
         var user = new User
         {
             Email = email,
@@ -44,7 +45,15 @@ public class AuthController : ControllerBase
 
         await _users.CreateAsync(user);
         var userId = string.IsNullOrWhiteSpace(user.Id) ? user.Email : user.Id;
-        return Ok(new { message = "Registered", userId, firstName, lastName });
+
+        return Ok(new
+        {
+            success = true,
+            message = "Registered",
+            userId,
+            firstName,
+            lastName
+        });
     }
 
     [HttpPost("login")]
@@ -54,14 +63,23 @@ public class AuthController : ControllerBase
         var password = request.Password;
 
         if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(password))
-            return BadRequest("Email and password are required.");
+            return BadRequest(new { success = false, message = "Email and password are required." });
 
         var user = await _users.FindByEmailAsync(email);
-        if (user == null) return Unauthorized();
+        if (user == null)
+            return Unauthorized(new { success = false, message = "Invalid credentials" });
 
-        if (user.PasswordHash != password) return Unauthorized();
+        if (user.PasswordHash != password)
+            return Unauthorized(new { success = false, message = "Invalid credentials" });
 
         var loginUserId = string.IsNullOrWhiteSpace(user.Id) ? user.Email : user.Id;
-        return Ok(new { message = "Logged in", userId = loginUserId, firstName = user.FirstName, lastName = user.LastName });
+        return Ok(new
+        {
+            success = true,
+            message = "Logged in",
+            userId = loginUserId,
+            firstName = user.FirstName,
+            lastName = user.LastName
+        });
     }
 }
