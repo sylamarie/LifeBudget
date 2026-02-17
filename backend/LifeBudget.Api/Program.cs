@@ -82,8 +82,17 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-app.Run($"http://0.0.0.0:{port}");
+var port = Environment.GetEnvironmentVariable("PORT");
+if (port != null)
+{
+    // Producción (Render)
+    app.Run($"http://0.0.0.0:{port}");
+}
+else
+{
+    // Desarrollo local
+    app.Run("http://localhost:5274");
+}
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
