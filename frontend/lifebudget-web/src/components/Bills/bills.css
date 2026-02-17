@@ -1,5 +1,26 @@
 .bills-page {
   display: grid;
+  gap: 18px;
+}
+
+.bills-card {
+  padding: 18px 20px 20px;
+}
+
+.bills-loading {
+  padding: 16px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.bills-error {
+  margin: 8px 0;
+  color: var(--color-error);
+  font-size: 0.9rem;
+}
+
+.bills-page {
+  display: grid;
 }
 
 
