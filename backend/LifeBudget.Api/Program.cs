@@ -4,31 +4,38 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Controllers
 builder.Services.AddControllers();
 
+// Swagger / OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// CORS: Dev + Producción
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("DevCors", policy =>
     {
-        var allowedOrigins = new List<string> { "http://localhost:5173" };
-        
-        // Add production frontend URL from environment variable
+        var allowedOrigins = new List<string>
+        {
+            "http://localhost:5173" // frontend desarrollo
+        };
+
         var productionUrl = Environment.GetEnvironmentVariable("FRONTEND_URL");
         if (!string.IsNullOrWhiteSpace(productionUrl))
         {
-            allowedOrigins.Add(productionUrl);
+            allowedOrigins.Add(productionUrl.TrimEnd('/'));
         }
-        
+
         policy.WithOrigins(allowedOrigins.ToArray())
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials();
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials();
     });
 });
 
+// Configuración MongoDB
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDb"));
 
@@ -49,29 +56,33 @@ builder.Services.AddSingleton(sp =>
     return client.GetDatabase(settings.DatabaseName);
 });
 
+// Repositories
 builder.Services.AddSingleton<UserRepository>();
 builder.Services.AddSingleton<TransactionRepository>();
 builder.Services.AddSingleton<GoalRepository>();
 builder.Services.AddSingleton<BillRepository>();
 builder.Services.AddSingleton<BudgetRepository>();
 
-
 var app = builder.Build();
 
+// Swagger
 app.UseSwagger();
 app.UseSwaggerUI();
 
+// CORS
 app.UseCors("DevCors");
 
+app.MapControllers();
+
+// Ejemplo endpoint de prueba
 var summaries = new[]
 {
     "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
 };
-app.MapControllers();
 
 app.MapGet("/weatherforecast", () =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
+    var forecast = Enumerable.Range(1, 5).Select(index =>
         new WeatherForecast
         (
             DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
@@ -82,9 +93,11 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 });
 
-var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+// Puerto dinámico para Render
+var port = Environment.GetEnvironmentVariable("PORT") ?? "5274";
 app.Run($"http://0.0.0.0:{port}");
 
+// Record para el endpoint de prueba
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);

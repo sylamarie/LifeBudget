@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
+const API_BASE = import.meta.env.VITE_API_URL;
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -12,12 +13,16 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
     setLoading(true);
 
-    const endpoint = isRegister ? "/api/auth/register" : "/api/auth/login";
+    const endpoint = isRegister
+      ? `${API_BASE}/api/auth/register`
+      : `${API_BASE}/api/auth/login`;
+
     const payload = isRegister
       ? { email, password, firstName, lastName }
       : { email, password };
