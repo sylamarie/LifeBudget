@@ -13,10 +13,7 @@ function LoginPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  console.log("ENV CHECK:", import.meta.env);
-  console.log("API_BASE:", import.meta.env.VITE_API_URL);
-
-
+ 
   const handleSubmit = async (event) => {
     event.preventDefault();
     setError("");
