@@ -5,7 +5,7 @@ import BillsSummary from "./BillsSummary";
 import BillsTable from "./BillsTable";
 import BillsModal from "./BillsModal";
 import { getBills, createBill, updateBillStatus, updateBill, deleteBill } from "./services/billsApi";
-import "./Bills.css";
+import "../../pages/BillsPage.css";
 
 function BillsPage() {
   const [bills, setBills] = useState([]);
