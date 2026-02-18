@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./LoginPage.css";
-const API_BASE = import.meta.env.VITE_API_URL;
+const API_BASE = (import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -20,8 +20,8 @@ function LoginPage() {
     setLoading(true);
 
     const endpoint = isRegister
-      ? `${API_BASE}/api/auth/register`
-      : `${API_BASE}/api/auth/login`;
+      ? `${API_BASE}/api/auth/register` || "/api/auth/register"
+      : `${API_BASE}/api/auth/login` || "/api/auth/login";
 
     const payload = isRegister
       ? { email, password, firstName, lastName }
@@ -142,3 +142,5 @@ function LoginPage() {
 }
 
 export default LoginPage;
+
+

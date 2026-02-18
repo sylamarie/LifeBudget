@@ -31,10 +31,20 @@ function DashboardShell() {
     localStorage.getItem("lifebudgetName") ||
     localStorage.getItem("lifebudgetEmail") ||
     "Account";
+  const storedName = localStorage.getItem("lifebudgetName") || "";
+  const email = localStorage.getItem("lifebudgetEmail") || "";
+  const firstNameFromName = storedName.trim().split(/\s+/)[0] || "";
+  const firstNameFromEmail = email.split("@")[0] || "";
+  const firstName = firstNameFromName || firstNameFromEmail;
+  const pageTitle =
+    location.pathname === "/app" && firstName
+      ? `Welcome, ${firstName}!`
+      : copy.title;
 
   const handleLogout = () => {
     localStorage.removeItem("lifebudgetUserId");
     localStorage.removeItem("lifebudgetEmail");
+    localStorage.removeItem("lifebudgetName");
     navigate("/login");
   };
 
@@ -146,7 +156,7 @@ function DashboardShell() {
           <div className="lb-main-header">
             <div>
               <p className="lb-kicker">{copy.kicker}</p>
-              <h1>{copy.title}</h1>
+              <h1>{pageTitle}</h1>
             </div>
             {showMonthButton ? (
               <div className="lb-month-nav" role="group" aria-label="Month navigation">
