@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../config";
 import { useEffect, useMemo, useState } from "react";
 import TransactionForm from "../components/TransactionForm";
 import "../components/DashboardShell.css";
@@ -70,7 +71,7 @@ function TransactionsPage() {
     }
 
     try {
-      const response = await fetch(`/api/transactions/${id}?userId=${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/transactions/${id}?userId=${userId}`, {
         method: "DELETE",
       });
 
@@ -96,7 +97,7 @@ function TransactionsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/transactions?userId=${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/transactions?userId=${userId}`);
         if (!response.ok) {
           throw new Error("Failed to load transactions.");
         }

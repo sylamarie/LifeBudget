@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../config";
 import { useEffect, useMemo, useState } from "react";
 import "./InsightsPage.css";
 import "../components/DashboardShell.css";
@@ -69,7 +70,7 @@ function InsightsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/transactions?userId=${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/transactions?userId=${userId}`);
         if (!response.ok) {
           throw new Error("Failed to load transactions.");
         }
@@ -291,7 +292,7 @@ function InsightsPage() {
       return;
     }
     try {
-      const response = await fetch(`/api/budgets/${id}?userId=${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/budgets/${id}?userId=${userId}`, {
         method: "DELETE",
       });
       if (!response.ok) {

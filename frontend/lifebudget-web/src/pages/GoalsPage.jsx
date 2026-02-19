@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "../config";
 import { useEffect, useMemo, useState } from "react";
 import "./GoalsPage.css";
 import "../components/DashboardShell.css";
@@ -35,7 +36,7 @@ function GoalsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/goals?userId=${userId}`);
+        const response = await fetch(`${API_BASE_URL}/api/goals?userId=${userId}`);
         if (!response.ok) {
           throw new Error("Failed to load goals.");
         }
@@ -148,7 +149,7 @@ function GoalsPage() {
     }
 
     try {
-      const response = await fetch(`/api/goals/${id}?userId=${userId}`, {
+      const response = await fetch(`${API_BASE_URL}/api/goals/${id}?userId=${userId}`, {
         method: "DELETE",
       });
 
