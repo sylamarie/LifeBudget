@@ -1,4 +1,6 @@
-const API_URL = "/api/Bills";
+import { apiUrl } from "../../../lib/api";
+
+const API_URL = apiUrl("/api/Bills");
 
 export async function getBills(userId) {
   const res = await fetch(`${API_URL}?userId=${userId}`);

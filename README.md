@@ -70,3 +70,30 @@ npm run dev
 
 The frontend will run at:
 http://localhost:5173
+```
+
+## Deploying on Render
+
+This repo now includes a root-level `render.yaml` that defines:
+
+- `lifebudget-api` as a Docker web service from `backend/LifeBudget.Api`
+- `lifebudget-web` as a static site from `frontend/lifebudget-web`
+
+### Before deploying
+
+- Move your MongoDB connection string to Render as `MONGODB_URI`
+- Set `FRONTEND_URL` on the API service to your deployed frontend URL
+- Rotate the MongoDB credentials currently present in `backend/LifeBudget.Api/appsettings.json` and stop using that committed secret
+
+### Render steps
+
+1. Push this repository to GitHub.
+2. In Render, choose **New +** -> **Blueprint**.
+3. Select this repository and deploy the root `render.yaml`.
+4. After the first deploy, open the `lifebudget-api` service and set `MONGODB_URI` if Render prompts for it.
+5. Copy the frontend URL from `lifebudget-web` and set it as `FRONTEND_URL` in `lifebudget-api`.
+6. Redeploy the API once after saving the environment variables.
+
+### Frontend environment variable
+
+The frontend reads `VITE_API_BASE_URL`. In Render, the blueprint automatically sets this to the API service URL.

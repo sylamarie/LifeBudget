@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { apiUrl } from "../lib/api";
 import "./InsightsPage.css";
 import "../components/DashboardShell.css";
 
@@ -69,7 +70,7 @@ function InsightsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/transactions?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/transactions?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load transactions.");
         }
@@ -86,7 +87,7 @@ function InsightsPage() {
       try {
         const monthKey = selectedMonthDate.toISOString().slice(0, 7);
         const response = await fetch(
-          `/api/budgets?userId=${userId}&month=${monthKey}`
+          apiUrl(`/api/budgets?userId=${userId}&month=${monthKey}`)
         );
         if (!response.ok) {
           throw new Error("Failed to load budgets.");
@@ -234,8 +235,8 @@ function InsightsPage() {
 
     const isEdit = Boolean(editingBudget);
     const endpoint = isEdit
-      ? `/api/budgets/${editingBudget.id || editingBudget._id}`
-      : "/api/budgets";
+      ? apiUrl(`/api/budgets/${editingBudget.id || editingBudget._id}`)
+      : apiUrl("/api/budgets");
 
     try {
       const response = await fetch(endpoint, {
@@ -291,7 +292,7 @@ function InsightsPage() {
       return;
     }
     try {
-      const response = await fetch(`/api/budgets/${id}?userId=${userId}`, {
+      const response = await fetch(apiUrl(`/api/budgets/${id}?userId=${userId}`), {
         method: "DELETE",
       });
       if (!response.ok) {

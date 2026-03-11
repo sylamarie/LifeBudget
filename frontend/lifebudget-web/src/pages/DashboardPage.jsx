@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
+import { apiUrl } from "../lib/api";
 import "../components/DashboardShell.css";
 
 function DashboardPage() {
@@ -144,7 +145,7 @@ function DashboardPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/transactions?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/transactions?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load transactions.");
         }
@@ -169,7 +170,7 @@ function DashboardPage() {
       setGoalsLoading(true);
       setGoalsError("");
       try {
-        const response = await fetch(`/api/goals?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/goals?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load goals.");
         }
@@ -188,7 +189,7 @@ function DashboardPage() {
       setBillsLoading(true);
       setBillsError("");
       try {
-        const response = await fetch(`/api/bills?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/bills?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load bills.");
         }

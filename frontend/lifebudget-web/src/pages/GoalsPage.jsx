@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { apiUrl } from "../lib/api";
 import "./GoalsPage.css";
 import "../components/DashboardShell.css";
 
@@ -35,7 +36,7 @@ function GoalsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/goals?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/goals?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load goals.");
         }
@@ -104,8 +105,8 @@ function GoalsPage() {
 
     const isEdit = Boolean(editingGoal);
     const endpoint = isEdit
-      ? `/api/goals/${editingGoal.id || editingGoal._id}`
-      : "/api/goals";
+      ? apiUrl(`/api/goals/${editingGoal.id || editingGoal._id}`)
+      : apiUrl("/api/goals");
 
     try {
       const response = await fetch(endpoint, {
@@ -148,7 +149,7 @@ function GoalsPage() {
     }
 
     try {
-      const response = await fetch(`/api/goals/${id}?userId=${userId}`, {
+      const response = await fetch(apiUrl(`/api/goals/${id}?userId=${userId}`), {
         method: "DELETE",
       });
 

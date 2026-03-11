@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import TransactionForm from "../components/TransactionForm";
+import { apiUrl } from "../lib/api";
 import "../components/DashboardShell.css";
 
 function TransactionsPage() {
@@ -28,8 +29,8 @@ function TransactionsPage() {
     try {
       const isEdit = Boolean(editingTransaction);
       const endpoint = isEdit
-        ? `/api/transactions/${editingTransaction.id || editingTransaction._id}`
-        : "/api/transactions";
+        ? apiUrl(`/api/transactions/${editingTransaction.id || editingTransaction._id}`)
+        : apiUrl("/api/transactions");
       const response = await fetch(endpoint, {
         method: isEdit ? "PUT" : "POST",
         headers: { "Content-Type": "application/json" },
@@ -70,7 +71,7 @@ function TransactionsPage() {
     }
 
     try {
-      const response = await fetch(`/api/transactions/${id}?userId=${userId}`, {
+      const response = await fetch(apiUrl(`/api/transactions/${id}?userId=${userId}`), {
         method: "DELETE",
       });
 
@@ -96,7 +97,7 @@ function TransactionsPage() {
       setLoading(true);
       setError("");
       try {
-        const response = await fetch(`/api/transactions?userId=${userId}`);
+        const response = await fetch(apiUrl(`/api/transactions?userId=${userId}`));
         if (!response.ok) {
           throw new Error("Failed to load transactions.");
         }

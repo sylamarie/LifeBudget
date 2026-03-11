@@ -73,6 +73,7 @@ app.UseSwaggerUI();
 app.UseCors("DevCors");
 
 app.MapControllers();
+app.MapGet("/health", () => Results.Ok(new { status = "ok" }));
 
 // Ejemplo endpoint de prueba
 var summaries = new[]
